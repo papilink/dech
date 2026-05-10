@@ -103,4 +103,13 @@ with col2:
     if audio_file:
         st.audio(audio_file, autoplay=True)
 
+# Micro botones para seleccionar sample específico
+st.markdown("### 🎬 Seleccionar Sample:")
+cols = st.columns(len(video_numbers))
+for i, vid_num in enumerate(video_numbers):
+    with cols[i]:
+        if st.button(f"Sample {vid_num}", key=f"sample_{vid_num}"):
+            st.session_state.current_vid = vid_num
+            st.rerun()
+
 st.caption("PAPIWEB DIGITAL AUDIO & VIDEO INTERFACE - CDA-117 ONLINE")
