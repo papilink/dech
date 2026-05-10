@@ -47,8 +47,16 @@ st.markdown("""
 # =========================
 # LÓGICA DE ESTADO
 # =========================
-if 'current_vid' not in st.session_state:
-    st.session_state.current_vid = random.randint(1, 5)
+# Obtener lista de videos disponibles dinámicamente
+video_files = [f for f in os.listdir('static') if f.startswith('sample') and f.endswith('.mp4')]
+video_numbers = sorted([int(f.replace('sample', '').replace('.mp4', '')) for f in video_files])
+
+if not video_numbers:
+    st.error("No se encontraron videos en la carpeta 'static/'. Agrega archivos sampleX.mp4.")
+    st.stop()
+
+if 'current_vid' not in st.session_state or st.session_state.current_vid not in video_numbers:
+    st.session_state.current_vid = random.choice(video_numbers)
 
 # =========================
 # PROCESAMIENTO BASE64
@@ -83,11 +91,11 @@ with col1:
     if st.button("⏭ SIGUIENTE SHOW (Random)"):
         # Lógica para evitar repetir el mismo video
         current = st.session_state.current_vid
-        new_vid = random.randint(1, 5)
-        while new_vid == current:
-            new_vid = random.randint(1, 5)
-            
-        st.session_state.current_vid = new_vid
+        available_vids = [v for v in video_numbers if v != current]
+        if available_vids:
+            st.session_state.current_vid = random.choice(available_vids)
+        else:
+            st.session_state.current_vid = random.choice(video_numbers)  # Si solo hay uno, repite
         st.rerun()
 
 with col2:

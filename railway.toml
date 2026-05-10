@@ -1,0 +1,11 @@
+[build]
+builder = "heroku.buildpacks"
+
+[deploy]
+numReplicas = 1
+restartPolicyMaxRetries = 0
+restartPolicyWindowSeconds = 300
+startCommand = "streamlit run streamlit_app.py --server.port=$PORT --server.address=0.0.0.0"
+
+[env]
+PORT = "8501"
